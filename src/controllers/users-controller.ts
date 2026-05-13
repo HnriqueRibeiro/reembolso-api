@@ -6,7 +6,7 @@ import { AppError } from "@/utils/AppError";
 import { hash } from "bcrypt";
 
 class UsersController {
-  async create(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response, _: NextFunction) {
     const bodySchema = z.object({
       name: z.string().trim().min(2, { message: "Nome é obrigatório!" }),
       email: z
@@ -32,14 +32,16 @@ class UsersController {
 
     const hashedPassword = await hash(password, 8);
 
-    await prisma.user.create({data:{
-      name:name,
-      email:email,
-      password:hashedPassword,
-      role:role
-    }})
+    await prisma.user.create({
+      data: {
+        name: name,
+        email: email,
+        password: hashedPassword,
+        role: role,
+      },
+    });
 
-    res.status(201).json()
+    res.status(201).json();
   }
 }
 
